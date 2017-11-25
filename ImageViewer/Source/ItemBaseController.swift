@@ -356,7 +356,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
         let swipeToDismissCompletionBlock = { [weak self] in
 
-            UIApplication.applicationWindow.windowLevel = UIWindowLevelNormal
+            SharedContainer.applicationWindow.windowLevel = UIWindowLevelNormal
             self?.swipingToDismiss = nil
             self?.delegate?.itemControllerDidFinishSwipeToDismissSuccessfully()
         }
@@ -414,7 +414,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
             self?.scrollView.zoomScale = self!.scrollView.minimumZoomScale
 
-            if UIApplication.isPortraitOnly {
+            if SharedContainer.isPortraitOnly {
                 self?.itemView.transform = windowRotationTransform().inverted()
             }
 
@@ -424,7 +424,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
             if finished {
 
-                UIApplication.applicationWindow.windowLevel = UIWindowLevelNormal
+                SharedContainer.applicationWindow.windowLevel = UIWindowLevelNormal
 
                 self?.isAnimating = false
             }
@@ -449,7 +449,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
                 let animatedImageView = displacedView.imageView()
 
                 //rotate the imageView to starting angle
-                if UIApplication.isPortraitOnly == true {
+                if SharedContainer.isPortraitOnly == true {
                     animatedImageView.transform = deviceRotationTransform()
                 }
 
@@ -465,7 +465,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
                 UIView.animate(withDuration: displacementDuration, delay: 0, usingSpringWithDamping: displacementSpringBounce, initialSpringVelocity: 1, options: .curveEaseIn, animations: { [weak self] in
 
-                    if UIApplication.isPortraitOnly == true {
+                    if SharedContainer.isPortraitOnly == true {
                         animatedImageView.transform = CGAffineTransform.identity
                     }
                     /// Animate it into the center (with optionally rotating) - that basically includes changing the size and position
@@ -542,7 +542,7 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
                     self?.scrollView.zoomScale = 1
 
                     //rotate the image view
-                    if UIApplication.isPortraitOnly == true {
+                    if SharedContainer.isPortraitOnly == true {
                         self?.itemView.transform = deviceRotationTransform()
                     }
 

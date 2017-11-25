@@ -175,7 +175,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         self.modalPresentationStyle = .overFullScreen
         self.dataSource = pagingDataSource
 
-        UIApplication.applicationWindow.windowLevel = (statusBarHidden) ? UIWindowLevelStatusBar + 1 : UIWindowLevelNormal
+        SharedContainer.applicationWindow.windowLevel = (statusBarHidden) ? UIWindowLevelStatusBar + 1 : UIWindowLevelNormal
 
         NotificationCenter.default.addObserver(self, selector: #selector(GalleryViewController.rotate), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
 
@@ -313,7 +313,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        if rotationMode == .always && UIApplication.isPortraitOnly {
+        if rotationMode == .always && SharedContainer.isPortraitOnly {
 
             let transform = windowRotationTransform()
             let bounds = rotationAdjustedBounds()
@@ -528,7 +528,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         /// of key Window will rotate all app's content with it via affine transform and from the perspective of the
         /// gallery it is just a simple relayout. Allowing access to remaining code only makes sense if the app is
         /// portrait only but we still want to support rotation inside the gallery.
-        guard UIApplication.isPortraitOnly else { return }
+        guard SharedContainer.isPortraitOnly else { return }
 
         guard UIDevice.current.orientation.isFlat == false &&
             isAnimating == false else { return }
@@ -606,7 +606,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         self.dismiss(animated: animated) {
 
-            UIApplication.applicationWindow.windowLevel = UIWindowLevelNormal
+            SharedContainer.applicationWindow.windowLevel = UIWindowLevelNormal
             completion?()
         }
     }

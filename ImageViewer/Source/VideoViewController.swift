@@ -74,8 +74,6 @@ class VideoViewController: ItemBaseController<VideoView> {
         self.player.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions.new, context: nil)
         self.player.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
 
-        UIApplication.shared.beginReceivingRemoteControlEvents()
-
         super.viewWillAppear(animated)
     }
 
@@ -83,8 +81,6 @@ class VideoViewController: ItemBaseController<VideoView> {
 
         self.player.removeObserver(self, forKeyPath: "status")
         self.player.removeObserver(self, forKeyPath: "rate")
-
-        UIApplication.shared.endReceivingRemoteControlEvents()
 
         super.viewWillDisappear(animated)
     }

@@ -38,7 +38,7 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
     }
 
     @objc func rotate() {
-        guard UIApplication.isPortraitOnly else { return }
+        guard SharedContainer.isPortraitOnly else { return }
 
         guard UIDevice.current.orientation.isFlat == false &&
             isAnimating == false else { return }
