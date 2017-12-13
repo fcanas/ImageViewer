@@ -16,7 +16,6 @@ class VideoViewController: ItemBaseController<VideoView> {
 
     fileprivate let swipeToDismissFadeOutAccelerationFactor: CGFloat = 6
 
-    let videoURL: URL
     let player: AVPlayer
     unowned let scrubber: VideoScrubber
 
@@ -26,12 +25,14 @@ class VideoViewController: ItemBaseController<VideoView> {
     
     private var autoPlayStarted: Bool = false
     private var autoPlayEnabled: Bool = false
+    
+    private var fetchVideoBlock: FetchVideoBlock
 
-    init(index: Int, itemCount: Int, fetchImageBlock: @escaping FetchImageBlock, videoURL: URL, scrubber: VideoScrubber, configuration: GalleryConfiguration, isInitialController: Bool = false) {
+    init(index: Int, itemCount: Int, fetchImageBlock: @escaping FetchImageBlock, fetchVideoBlock: @escaping FetchVideoBlock, scrubber: VideoScrubber, configuration: GalleryConfiguration, isInitialController: Bool = false) {
 
-        self.videoURL = videoURL
+        self.fetchVideoBlock = fetchVideoBlock
         self.scrubber = scrubber
-        self.player = AVPlayer(url: self.videoURL)
+        self.player = AVPlayer()
         
         ///Only those options relevant to the paging VideoViewController are explicitly handled here, the rest is handled by ItemViewControllers
         for item in configuration {
@@ -46,6 +47,7 @@ class VideoViewController: ItemBaseController<VideoView> {
         }
 
         super.init(index: index, itemCount: itemCount, fetchImageBlock: fetchImageBlock, configuration: configuration, isInitialController: isInitialController)
+        fetchVideo()
     }
 
     override func viewDidLoad() {
@@ -230,5 +232,11 @@ class VideoViewController: ItemBaseController<VideoView> {
         autoPlayStarted = true
         embeddedPlayButton.isHidden = true
         scrubber.play()
+    }
+    
+    func fetchVideo() {
+        fetchVideoBlock { [weak self] (asset) in
+            asset.map(AVPlayerItem.init).map { self?.player.replaceCurrentItem(with: $0) }
+        }
     }
 }
