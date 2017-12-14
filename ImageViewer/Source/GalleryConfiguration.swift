@@ -150,8 +150,8 @@ public enum GalleryConfigurationItem {
     ///Allows to set rotation support support with relation to rotation support in the hosting app.
     case rotationMode(GalleryRotationMode)
     
-    ///Allows the video player to automatically continue playing the next video
-    case continuePlayVideoOnEnd(Bool)
+    ///Allows the video player to automatically loop or continue playing the next video
+    case videoEndAction(VideoEndAction)
 
     ///Allows auto play video after gallery presented
     case videoAutoPlay(Bool)
@@ -203,4 +203,10 @@ public struct GallerySwipeToDismissMode: OptionSet {
     public static let horizontal = GallerySwipeToDismissMode(rawValue: 1 << 0)
     public static let vertical   = GallerySwipeToDismissMode(rawValue: 1 << 1)
     public static let always: GallerySwipeToDismissMode = [ .horizontal, .vertical ]
+}
+
+public enum VideoEndAction {
+    case none
+    case advance
+    case loop
 }

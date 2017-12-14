@@ -16,7 +16,7 @@ class VideoViewController: ItemBaseController<VideoView> {
 
     fileprivate let swipeToDismissFadeOutAccelerationFactor: CGFloat = 6
 
-    let player: AVPlayer
+    let player: AVQueuePlayer
     unowned let scrubber: VideoScrubber
 
     let fullHDScreenSizeLandscape = CGSize(width: 1920, height: 1080)
@@ -25,6 +25,7 @@ class VideoViewController: ItemBaseController<VideoView> {
     
     private var autoPlayStarted: Bool = false
     private var autoPlayEnabled: Bool = false
+    private var loopingEnabled: Bool = false
     
     private var fetchVideoBlock: FetchVideoBlock
 
@@ -32,7 +33,7 @@ class VideoViewController: ItemBaseController<VideoView> {
 
         self.fetchVideoBlock = fetchVideoBlock
         self.scrubber = scrubber
-        self.player = AVPlayer()
+        self.player = AVQueuePlayer()
         
         ///Only those options relevant to the paging VideoViewController are explicitly handled here, the rest is handled by ItemViewControllers
         for item in configuration {
@@ -41,6 +42,9 @@ class VideoViewController: ItemBaseController<VideoView> {
                 
             case .videoAutoPlay(let enabled):
                 autoPlayEnabled = enabled
+                
+            case .videoEndAction(let action):
+                loopingEnabled = action == .loop
                 
             default: break
             }
@@ -234,9 +238,25 @@ class VideoViewController: ItemBaseController<VideoView> {
         scrubber.play()
     }
     
+    private var looper :NSObject?
+    
     func fetchVideo() {
         fetchVideoBlock { [weak self] (asset) in
-            asset.map(AVPlayerItem.init).map { self?.player.replaceCurrentItem(with: $0) }
+            
+            guard let s = self, let asset = asset else {
+                return
+            }
+            
+            if s.loopingEnabled {
+                let item = AVPlayerItem(asset: asset)
+                if #available(iOSApplicationExtension 10.0, *) {
+                    _ = item.duration
+                    s.looper = AVPlayerLooper(player: s.player, templateItem: item)
+                } else {
+                    s.player.replaceCurrentItem(with: item)
+                }
+            }
+            
         }
     }
 }

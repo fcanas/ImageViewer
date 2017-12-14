@@ -80,7 +80,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
         self.currentIndex = startIndex
         self.itemsDelegate = itemsDelegate
         self.itemsDataSource = itemsDataSource
-        var continueNextVideoOnFinish: Bool = false
+        var videoEndAction :VideoEndAction = .none
 
         ///Only those options relevant to the paging GalleryViewController are explicitly handled here, the rest is handled by ItemViewControllers
         for item in configuration {
@@ -111,7 +111,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
             case .blurDismissDelay(let delay):                  overlayView.blurDismissDelay = delay
             case .colorDismissDuration(let duration):           overlayView.colorDismissDuration = duration
             case .colorDismissDelay(let delay):                 overlayView.colorDismissDelay = delay
-            case .continuePlayVideoOnEnd(let enabled):          continueNextVideoOnFinish = enabled
+            case .videoEndAction(let action):                   videoEndAction = action
             case .seeAllCloseLayout(let layout):                seeAllCloseLayout = layout
             case .videoControlsColor(let color):                scrubber.tintColor = color
             case .closeButtonMode(let buttonMode):
@@ -179,7 +179,7 @@ open class GalleryViewController: UIPageViewController, ItemControllerDelegate {
 
         NotificationCenter.default.addObserver(self, selector: #selector(GalleryViewController.rotate), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
 
-        if continueNextVideoOnFinish {
+        if videoEndAction == .advance {
             NotificationCenter.default.addObserver(self, selector: #selector(didEndPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
         }
     }
