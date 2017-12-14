@@ -61,7 +61,7 @@ open class VideoScrubber: UIControl {
                 NotificationCenter.default.addObserver(self, selector: #selector(didEndPlaying), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
 
                 ///TIMER
-                periodicObserver = player.addPeriodicTimeObserver(forInterval: CMTime(value: 1, timescale: 1), queue: nil, using: { [weak self] time in
+                periodicObserver = player.addPeriodicTimeObserver(forInterval: CMTime(value: 1, timescale: 60), queue: nil, using: { [weak self] time in
                     self?.update()
                 }) as AnyObject?
 
