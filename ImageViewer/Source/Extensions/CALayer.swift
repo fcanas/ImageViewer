@@ -10,14 +10,26 @@ import UIKit
 
 extension CALayer {
 
-    func toImage() -> UIImage {
+    public func toImage() -> UIImage {
 
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
-        let context = UIGraphicsGetCurrentContext()
-        self.render(in: context!)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+        if #available(iOSApplicationExtension 10.0, *) {
+            let renderer = UIGraphicsImageRenderer(size: self.frame.size)
+            return renderer.image { (context) in
+                context.cgContext.setFillColor(UIColor.white.cgColor)
+                context.cgContext.setStrokeColor(UIColor.clear.cgColor)
+                self.render(in: context.cgContext)
+            }
+        } else {
+            UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
+            let context = UIGraphicsGetCurrentContext()
+            context?.setFillColor(UIColor.white.cgColor)
+            context?.setStrokeColor(UIColor.clear.cgColor)
+            self.render(in: context!)
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
 
-        return image!
+            return image!
+        }
+
     }
 }

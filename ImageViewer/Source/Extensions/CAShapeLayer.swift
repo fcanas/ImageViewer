@@ -80,7 +80,7 @@ extension CAShapeLayer {
         return circle
     }
 
-    static func closeShape(edgeLength: CGFloat) -> CAShapeLayer {
+    public static func closeShape(edgeLength: CGFloat) -> CAShapeLayer {
 
         let container = CAShapeLayer()
         container.bounds.size = CGSize(width: edgeLength + 4, height: edgeLength + 4)
