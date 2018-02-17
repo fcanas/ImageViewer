@@ -199,19 +199,22 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
         fetchImageBlock { [weak self] image in
 
-            if let image = image {
-
+            defer {
                 DispatchQueue.main.async {
                     self?.activityIndicatorView.stopAnimating()
 
+                    self?.view.setNeedsLayout()
+                    self?.view.layoutIfNeeded()
+                }
+            }
+
+            if let image = image {
+                DispatchQueue.main.async {
                     var itemView = self?.itemView
                     itemView?.image = image
                     itemView?.isAccessibilityElement = image.isAccessibilityElement
                     itemView?.accessibilityLabel = image.accessibilityLabel
                     itemView?.accessibilityTraits = image.accessibilityTraits
-
-                    self?.view.setNeedsLayout()
-                    self?.view.layoutIfNeeded()
                 }
             }
         }
