@@ -250,9 +250,10 @@ open class ItemBaseController<T: UIView>: UIViewController, ItemController, UIGe
 
             itemView.bounds.size = aspectFitItemSize
             scrollView.contentSize = itemView.bounds.size
-
-            itemView.center = scrollView.boundsCenter
+        } else {
+            itemView.bounds.size = self.view.bounds.size
         }
+        itemView.center = scrollView.boundsCenter
     }
 
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
